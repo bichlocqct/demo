@@ -155,9 +155,12 @@ export default function ScannerGuide() {
             <Image 
               src={currentStepData.image} 
               alt={currentStepData.title}
-              width={260} 
-              height={260}
-              style={{ objectFit: "contain", filter: currentStepData.isPhoto ? "none" : "grayscale(100%)" }}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              style={{ 
+                objectFit: currentStepData.isPhoto ? "cover" : "contain", 
+                filter: currentStepData.isPhoto ? "none" : "grayscale(100%)" 
+              }}
             />
             <div style={{ 
               position: "absolute", 
