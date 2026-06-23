@@ -44,7 +44,9 @@ export default function ScannerGuide() {
     {
       title: "Bước 3: Chọn Chức Năng Soi",
       desc: "Cầm đầu soi da và ấn nút điều khiển đầu tiên ở cạnh ngón cái. Mỗi lần ấn sẽ tương ứng với 1 trong 3 chức năng theo thứ tự:\n\n• Ấn lần 1 (White Light): Soi bề mặt tóc, lượng dầu và gàu bết.\n• Ấn lần 2 (Polarized Light): Xem sâu nang tóc, tình trạng viêm đỏ.\n• Ấn lần 3 (UV/Blue Light): Phát hiện nấm da đầu, bã nhờn ẩn sâu.",
-      image: "/usage_diagram.png"
+      image: "/probe_button.jpg",
+      isPhoto: true,
+      objectFit: "contain"
     },
     {
       title: "Bước 4: Soi & Đánh Giá",
