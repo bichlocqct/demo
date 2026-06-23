@@ -71,6 +71,32 @@ export default function ScalpClassifier() {
 
     if (normalCount > 0) {
       // Normal type already initialized
+    } else if (oilyCount > 0 && (dryCount > 0 || sensitiveCount > 0)) {
+      result = {
+        type: "Da đầu hỗn hợp (Combination Scalp)",
+        desc: "Tình trạng da đầu đổ nhiều dầu ở vùng đỉnh đầu nhưng lại bị khô ráp, bong tróc hoặc nhạy cảm ở vùng hai bên thái dương và sau gáy. Tình trạng này thay đổi thất thường theo thời tiết và mùa trong năm.",
+        issues: "Phân bổ bã nhờn không đồng đều, nang tóc vùng đỉnh dễ bết tắc trong khi vùng bên cạnh thiếu độ ẩm tự nhiên.",
+        routine: [
+          {
+            step: "Bước 1: Scalp Treatment",
+            name: "Roots",
+            desc: "Massage mặt nạ đất sét bạc hà tươi lên vùng da đầu đổ dầu nhiều (đỉnh đầu) trước khi gội 15 phút để làm sạch sâu bã nhờn.",
+            usage: "Thoa lên phần da đầu dầu ở đỉnh đầu trước khi gội 15-20 phút, massage nhẹ và xả sạch."
+          },
+          {
+            step: "Bước 2: Shampoo",
+            name: "Fairly Traded Honey",
+            desc: "Dầu gội chứa hơn 50% mật ong tự nhiên giúp kháng khuẩn và cấp ẩm cân bằng cho toàn bộ da đầu mà không gây xẹp tóc hay làm khô các vùng nhạy cảm.",
+            usage: "Tạo bọt kỹ và gội sạch nhẹ nhàng toàn bộ da đầu."
+          },
+          {
+            step: "Bước 3: Conditioner",
+            name: "Veganese",
+            desc: "Dầu xả mỏng nhẹ chiết xuất thạch agar agar và chanh tươi giúp làm mượt thân và ngọn tóc, giữ độ tơi phồng tự nhiên cho chân tóc.",
+            usage: "Chỉ thoa dầu xả ở ngọn tóc và thân tóc, tránh tuyệt đối bôi trực tiếp lên da đầu."
+          }
+        ]
+      };
     } else if (dandruffCount > 0) {
       result = {
         type: "Da đầu gàu & ngứa nấm (Dandruff / Flaky Scalp)",
@@ -212,156 +238,405 @@ export default function ScalpClassifier() {
   };
 
   return (
-    <div className="fade-in" style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div className="fade-in" style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
       
-      <div style={{ borderBottom: "1px solid var(--lush-gray-medium)", paddingBottom: "12px" }}>
-        <h2 style={{ fontSize: "1.5rem" }}>Trạm Chẩn Đoán & Phân Loại Da Đầu</h2>
-        <p style={{ color: "#666", fontSize: "0.9rem" }}>
-          Hãy chọn các triệu chứng / dấu hiệu quan sát được dưới máy soi da đầu của khách hàng để hệ thống gợi ý tình trạng và routine LUSH tương ứng.
-        </p>
-      </div>
-
-      <div className="grid-split-classifier">
-        
-        {/* Left Column: Quiz Options */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          <h3 style={{ fontSize: "1.1rem", textTransform: "uppercase" }}>Dấu Hiệu Quan Sát Dưới Máy Soi:</h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            {symptomsList.map((symptom) => {
-              const isSelected = selectedSymptoms.includes(symptom.id);
-              return (
-                <div 
-                  key={symptom.id}
-                  onClick={() => handleSymptomToggle(symptom.id)}
-                  className={`quiz-option ${isSelected ? "selected" : ""}`}
-                >
-                  <div style={{
-                    width: "18px",
-                    height: "18px",
-                    border: "2px solid currentColor",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "2px",
-                    flexShrink: 0
-                  }}>
-                    {isSelected && <div style={{ width: "10px", height: "10px", background: "currentColor" }} />}
-                  </div>
-                  <span style={{ fontSize: "0.9rem", fontWeight: "600" }}>{symptom.label}</span>
-                </div>
-              );
-            })}
-          </div>
-
-          <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
-            <button className="lush-btn" onClick={runDiagnosis} style={{ flex: 1 }}>
-              Chẩn Đoán Tình Trạng
-            </button>
-            <button className="lush-btn lush-btn-secondary" onClick={resetQuiz}>
-              Xóa Lựa Chọn
-            </button>
-          </div>
+      {/* Top Diagnostics Station */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        <div style={{ borderBottom: "1px solid var(--lush-gray-medium)", paddingBottom: "12px" }}>
+          <h2 style={{ fontSize: "1.5rem" }}>Trạm Chẩn Đoán & Phân Loại Da Đầu</h2>
+          <p style={{ color: "#666", fontSize: "0.9rem" }}>
+            Hãy chọn các triệu chứng / dấu hiệu quan sát được dưới máy soi da đầu của khách hàng để hệ thống gợi ý tình trạng và routine LUSH tương ứng.
+          </p>
         </div>
 
-        {/* Right Column: Result Diagnostic Card */}
-        <div>
-          {diagnosis ? (
-            <div className="fade-in" style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-              
-              {/* Scalp Diagnosis Header */}
-              <div style={{ 
-                border: "3px solid var(--lush-black)", 
-                background: "var(--lush-black)", 
-                color: "var(--lush-white)", 
-                padding: "24px",
-                position: "relative"
-              }}>
-                <div className="lush-tag" style={{ background: "var(--lush-gold)", color: "#000", border: "none", fontWeight: "800", marginBottom: "8px" }}>
-                  KẾT QUẢ PHÂN TÍCH
-                </div>
-                <h2 style={{ fontSize: "1.6rem", textTransform: "uppercase", margin: "4px 0 8px" }}>{diagnosis.type}</h2>
-                <div style={{ borderTop: "1px solid #444", paddingTop: "12px", marginTop: "12px" }}>
-                  <p style={{ fontSize: "0.95rem", color: "#ccc", lineHeight: "1.5" }}>
-                    <strong>Mô tả tình trạng:</strong> {diagnosis.desc}
-                  </p>
-                  <p style={{ fontSize: "0.95rem", color: "#ccc", lineHeight: "1.5", marginTop: "8px" }}>
-                    <strong>Vấn đề cần tập trung:</strong> {diagnosis.issues}
-                  </p>
-                </div>
-              </div>
-
-              {/* LUSH Routine Recommendation */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                <h3 style={{ fontSize: "1.2rem", textTransform: "uppercase" }}>🌿 LUSH Routine Đề Xuất Phù Hợp:</h3>
-                
-                {diagnosis.routine.map((product, idx) => (
+        <div className="grid-split-classifier">
+          
+          {/* Left Column: Quiz Options */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            <h3 style={{ fontSize: "1.1rem", textTransform: "uppercase" }}>Dấu Hiệu Quan Sát Dưới Máy Soi:</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              {symptomsList.map((symptom) => {
+                const isSelected = selectedSymptoms.includes(symptom.id);
+                return (
                   <div 
-                    key={idx}
-                    className="lush-card"
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "auto 1fr",
-                      gap: "20px",
-                      alignItems: "start",
-                      padding: "20px"
-                    }}
+                    key={symptom.id}
+                    onClick={() => handleSymptomToggle(symptom.id)}
+                    className={`quiz-option ${isSelected ? "selected" : ""}`}
                   >
-                    {/* Circle Step Number */}
                     <div style={{
-                      width: "36px",
-                      height: "36px",
-                      borderRadius: "50%",
-                      background: "var(--lush-black)",
-                      color: "var(--lush-white)",
+                      width: "18px",
+                      height: "18px",
+                      border: "2px solid currentColor",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontWeight: "bold",
-                      fontSize: "15px"
+                      borderRadius: "2px",
+                      flexShrink: 0
                     }}>
-                      {idx + 1}
+                      {isSelected && <div style={{ width: "10px", height: "10px", background: "currentColor" }} />}
                     </div>
-
-                    {/* Product Details */}
-                    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-                        <span className="sub-title" style={{ fontSize: "0.7rem", color: "#666" }}>{product.step}</span>
-                        <span className="lush-tag green" style={{ fontSize: "0.7rem", padding: "2px 6px" }}>{product.name}</span>
-                      </div>
-                      <p style={{ fontSize: "0.9rem", color: "#333", marginTop: "2px" }}>
-                        <strong>Thành phần & Công dụng:</strong> {product.desc}
-                      </p>
-                      <p style={{ fontSize: "0.85rem", color: "var(--lush-green)", background: "var(--lush-green-light)", padding: "6px 10px", marginTop: "4px" }}>
-                        💡 <strong>Cách dùng tại tiệm/tư vấn:</strong> {product.usage}
-                      </p>
-                    </div>
-
+                    <span style={{ fontSize: "0.9rem", fontWeight: "600" }}>{symptom.label}</span>
                   </div>
-                ))}
-              </div>
-
+                );
+              })}
             </div>
-          ) : (
-            <div style={{
-              border: "2px dashed var(--lush-gray-medium)",
-              padding: "48px 24px",
-              textAlign: "center",
-              color: "#888",
-              height: "100%",
-              minHeight: "350px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "12px"
-            }}>
-              <span style={{ fontSize: "3rem" }}>🔍</span>
-              <h3 style={{ fontSize: "1.2rem", color: "#444" }}>Chưa có kết quả chẩn đoán</h3>
-              <p style={{ fontSize: "0.9rem", maxWidth: "300px" }}>
-                Hãy tích chọn các biểu hiện quan sát được ở cột bên trái và nhấn nút "Chẩn Đoán Tình Trạng" để hệ thống tính toán kết quả da đầu và routine LUSH tương ứng.
+
+            <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
+              <button className="lush-btn" onClick={runDiagnosis} style={{ flex: 1 }}>
+                Chẩn Đoán Tình Trạng
+              </button>
+              <button className="lush-btn lush-btn-secondary" onClick={resetQuiz}>
+                Xóa Lựa Chọn
+              </button>
+            </div>
+          </div>
+
+          {/* Right Column: Result Diagnostic Card */}
+          <div>
+            {diagnosis ? (
+              <div className="fade-in" style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+                
+                {/* Scalp Diagnosis Header */}
+                <div style={{ 
+                  border: "3px solid var(--lush-black)", 
+                  background: "var(--lush-black)", 
+                  color: "var(--lush-white)", 
+                  padding: "24px",
+                  position: "relative"
+                }}>
+                  <div className="lush-tag" style={{ background: "var(--lush-gold)", color: "#000", border: "none", fontWeight: "800", marginBottom: "8px" }}>
+                    KẾT QUẢ PHÂN TÍCH
+                  </div>
+                  <h2 style={{ fontSize: "1.6rem", textTransform: "uppercase", margin: "4px 0 8px" }}>{diagnosis.type}</h2>
+                  <div style={{ borderTop: "1px solid #444", paddingTop: "12px", marginTop: "12px" }}>
+                    <p style={{ fontSize: "0.95rem", color: "#ccc", lineHeight: "1.5" }}>
+                      <strong>Mô tả tình trạng:</strong> {diagnosis.desc}
+                    </p>
+                    <p style={{ fontSize: "0.95rem", color: "#ccc", lineHeight: "1.5", marginTop: "8px" }}>
+                      <strong>Vấn đề cần tập trung:</strong> {diagnosis.issues}
+                    </p>
+                  </div>
+                </div>
+
+                {/* LUSH Routine Recommendation */}
+                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                  <h3 style={{ fontSize: "1.2rem", textTransform: "uppercase" }}>🌿 LUSH Routine Đề Xuất Phù Hợp:</h3>
+                  
+                  {diagnosis.routine.map((product, idx) => (
+                    <div 
+                      key={idx}
+                      className="lush-card"
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "auto 1fr",
+                        gap: "20px",
+                        alignItems: "start",
+                        padding: "20px"
+                      }}
+                    >
+                      {/* Circle Step Number */}
+                      <div style={{
+                        width: "36px",
+                        height: "36px",
+                        borderRadius: "50%",
+                        background: "var(--lush-black)",
+                        color: "var(--lush-white)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontWeight: "bold",
+                        fontSize: "15px"
+                      }}>
+                        {idx + 1}
+                      </div>
+
+                      {/* Product Details */}
+                      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                          <span className="sub-title" style={{ fontSize: "0.7rem", color: "#666" }}>{product.step}</span>
+                          <span className="lush-tag green" style={{ fontSize: "0.7rem", padding: "2px 6px" }}>{product.name}</span>
+                        </div>
+                        <p style={{ fontSize: "0.9rem", color: "#333", marginTop: "2px" }}>
+                          <strong>Thành phần & Công dụng:</strong> {product.desc}
+                        </p>
+                        <p style={{ fontSize: "0.85rem", color: "var(--lush-green)", background: "var(--lush-green-light)", padding: "6px 10px", marginTop: "4px" }}>
+                          💡 <strong>Cách dùng tại tiệm/tư vấn:</strong> {product.usage}
+                        </p>
+                      </div>
+
+                    </div>
+                  ))}
+                </div>
+
+              </div>
+            ) : (
+              <div style={{
+                border: "2px dashed var(--lush-gray-medium)",
+                padding: "48px 24px",
+                textAlign: "center",
+                color: "#888",
+                height: "100%",
+                minHeight: "350px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "12px"
+              }}>
+                <span style={{ fontSize: "3rem" }}>🔍</span>
+                <h3 style={{ fontSize: "1.2rem", color: "#444" }}>Chưa có kết quả chẩn đoán</h3>
+                <p style={{ fontSize: "0.9rem", maxWidth: "300px" }}>
+                  Hãy tích chọn các biểu hiện quan sát được ở cột bên trái và nhấn nút "Chẩn Đoán Tình Trạng" để hệ thống tính toán kết quả da đầu và routine LUSH tương ứng.
+                </p>
+              </div>
+            )}
+          </div>
+
+        </div>
+      </div>
+
+      {/* Educational Guide Section from Infographic */}
+      <div style={{ marginTop: "40px", borderTop: "3px solid var(--lush-black)", paddingTop: "40px", display: "flex", flexDirection: "column", gap: "32px" }}>
+        
+        <div style={{ textAlign: "center", marginBottom: "10px" }}>
+          <span className="sub-title" style={{ color: "var(--lush-green)", fontSize: "0.85rem", fontWeight: "800" }}>LUSH HAIRCARE</span>
+          <h2 style={{ fontSize: "2rem", marginTop: "8px", fontFamily: "var(--font-serif)" }}>Thấu Hiểu Mái Tóc Từ Khoa Học Đến Thiên Nhiên</h2>
+          <p style={{ color: "#555", maxWidth: "600px", margin: "10px auto 0", fontSize: "0.95rem" }}>
+            Hệ thống kiến thức đào tạo chuyên sâu về cấu tạo tóc, chu kỳ sinh trưởng và các giải pháp chăm sóc phục hồi chuyên biệt từ thảo mộc LUSH.
+          </p>
+        </div>
+
+        {/* Row 1: Science Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
+          
+          {/* Card 1: Structure */}
+          <div className="lush-card" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <h3 style={{ fontSize: "1.1rem", borderBottom: "2px solid #000", paddingBottom: "8px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span>🔬</span> Cấu Trúc Sợi Tóc 3 Lớp
+            </h3>
+            <div style={{ position: "relative", padding: "12px", background: "var(--lush-gray-light)", border: "1px solid var(--lush-gray-medium)", borderRadius: "4px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "0.85rem" }}>
+                <div style={{ borderLeft: "4px solid var(--lush-green)", paddingLeft: "10px" }}>
+                  <strong style={{ textTransform: "uppercase", fontSize: "0.75rem", display: "block" }}>1. Biểu bì (Cuticle) - Lớp bảo vệ bên ngoài</strong>
+                  Lớp vảy sừng xếp chồng lên nhau giúp giữ ẩm và bảo vệ phần lõi tóc khỏi tác động bên ngoài.
+                </div>
+                <div style={{ borderLeft: "4px solid var(--lush-gold)", paddingLeft: "10px" }}>
+                  <strong style={{ textTransform: "uppercase", fontSize: "0.75rem", display: "block" }}>2. Vỏ (Cortex) - Lớp chứa sắc tố</strong>
+                  Chiếm 80% thể tích sợi tóc, chứa sắc tố Melanin quyết định màu tóc và các chuỗi keratin quyết định độ đàn hồi.
+                </div>
+                <div style={{ borderLeft: "4px solid var(--lush-black)", paddingLeft: "10px" }}>
+                  <strong style={{ textTransform: "uppercase", fontSize: "0.75rem", display: "block" }}>3. Tủy (Medulla) - Lõi trong cùng</strong>
+                  Phần cốt lõi rỗng ở trung tâm, chỉ xuất hiện ở các sợi tóc dày và khỏe.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2: Growth Cycle */}
+          <div className="lush-card" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <h3 style={{ fontSize: "1.1rem", borderBottom: "2px solid #000", paddingBottom: "8px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span>🔄</span> Chu Kỳ Phát Triển Của Tóc
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", fontSize: "0.85rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px", background: "var(--lush-green-light)", color: "var(--lush-green)", fontWeight: "bold" }}>
+                <span>🌱 80% Anagen (Phát triển)</span>
+                <span style={{ fontSize: "0.75rem", textTransform: "uppercase" }}>2 - 6 năm</span>
+              </div>
+              <p style={{ margin: "-8px 0 8px 8px", fontSize: "0.8rem", color: "#666" }}>
+                Nang tóc hoạt động tích cực, tế bào phân chia liên tục làm sợi tóc mọc dài ra.
+              </p>
+              
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px", background: "var(--lush-gold-light)", color: "#8a6a00", fontWeight: "bold" }}>
+                <span>🍂 5% Catagen (Thoái hóa)</span>
+                <span style={{ fontSize: "0.75rem", textTransform: "uppercase" }}>2 - 3 tuần</span>
+              </div>
+              <p style={{ margin: "-8px 0 8px 8px", fontSize: "0.8rem", color: "#666" }}>
+                Nang tóc co lại, sợi tóc ngừng phát triển và tách dần khỏi nguồn dinh dưỡng.
+              </p>
+
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px", background: "#fcefe2", color: "#b85c00", fontWeight: "bold" }}>
+                <span>❄️ 10-15% Telogen (Nghỉ ngơi)</span>
+                <span style={{ fontSize: "0.75rem", textTransform: "uppercase" }}>~3 tháng</span>
+              </div>
+              <p style={{ margin: "-8px 0 0 8px", fontSize: "0.8rem", color: "#666" }}>
+                Sợi tóc cũ rụng đi, nang tóc tạm nghỉ ngơi trước khi tái tạo vòng đời mới.
               </p>
             </div>
-          )}
+          </div>
+
+          {/* Card 3: Porosity & Follicles */}
+          <div className="lush-card" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <h3 style={{ fontSize: "1.1rem", borderBottom: "2px solid #000", paddingBottom: "8px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span>💧</span> Độ Xốp & Dạng Nang Tóc
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "0.85rem" }}>
+              <div>
+                <strong>Độ Xốp Thấp (Low Porosity):</strong> Lớp biểu bì đóng khép chặt. Tóc bóng mượt nhưng khó hấp thụ nước và dưỡng chất.
+              </div>
+              <div>
+                <strong>Độ Xốp Cao (High Porosity):</strong> Lớp biểu bì mở rộng hoặc bị hư tổn (uốn/nhuộm). Dễ hấp thụ nước nhưng bốc hơi ẩm cực nhanh, gây khô rối.
+              </div>
+              <div style={{ borderTop: "1px dashed var(--lush-gray-medium)", paddingTop: "8px", marginTop: "4px" }}>
+                <strong>Dạng Nang Quyết Định Kiểu Tóc:</strong>
+                <div style={{ display: "flex", justifyContent: "space-around", marginTop: "8px", fontSize: "0.8rem" }}>
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ width: "24px", height: "24px", borderRadius: "50%", border: "2px solid #000", margin: "0 auto 4px", background: "#fff" }}></div>
+                    <span>Nang Tròn<br/>(Tóc Thẳng)</span>
+                  </div>
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ width: "28px", height: "20px", borderRadius: "50% / 40%", border: "2px solid #000", margin: "2px auto 6px", background: "#fff" }}></div>
+                    <span>Nang Bầu Dục<br/>(Tóc Xoăn Sóng)</span>
+                  </div>
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ width: "28px", height: "14px", borderRadius: "50% / 20%", border: "2px solid #000", margin: "5px auto 9px", background: "#fff" }}></div>
+                    <span>Nang Dẹt<br/>(Tóc Xoăn)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Row 2: Scalp Classifications */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          <h3 style={{ fontSize: "1.3rem", display: "flex", alignItems: "center", gap: "10px" }}>
+            <span>👤</span> Phân Loại Da Đầu Phổ Biến & Giải Pháp LUSH
+          </h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
+            
+            {/* Dry Scalp */}
+            <div className="lush-card" style={{ display: "flex", flexDirection: "column", gap: "12px", borderLeft: "8px solid #c0392b" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span className="lush-tag dark">DA KHÔ</span>
+                <span style={{ fontSize: "1.5rem" }}>🍂</span>
+              </div>
+              <div style={{ fontSize: "0.85rem", color: "#444" }}>
+                <p><strong>Triệu chứng:</strong> Căng chặt da đầu, khó chịu, bong tróc vảy khô mảng lớn. Sợi tóc thường khô xơ và dễ chẻ ngọn.</p>
+                <p style={{ marginTop: "4px" }}><strong>Nguyên nhân:</strong> Thiếu dầu tự nhiên để duy trì độ ẩm cần thiết cho lớp màng bảo vệ da đầu.</p>
+              </div>
+              <div style={{ marginTop: "8px", paddingTop: "8px", borderTop: "1px solid var(--lush-gray-medium)", fontSize: "0.85rem" }}>
+                <strong style={{ color: "var(--lush-red)", display: "block", marginBottom: "4px" }}>💡 GIẢI PHÁP TỪ LUSH:</strong>
+                Cấp ẩm sâu và nuôi dưỡng biểu bì. Sử dụng sáp dưỡng chuyên sâu <strong>SuperBalm</strong> trước khi gội và dầu gội dưỡng ẩm mật ong <strong>Fairly Traded Honey</strong>.
+              </div>
+            </div>
+
+            {/* Oily Scalp */}
+            <div className="lush-card" style={{ display: "flex", flexDirection: "column", gap: "12px", borderLeft: "8px solid var(--lush-green)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span className="lush-tag dark">DA DẦU</span>
+                <span style={{ fontSize: "1.5rem" }}>💧</span>
+              </div>
+              <div style={{ fontSize: "0.85rem", color: "#444" }}>
+                <p><strong>Triệu chứng:</strong> Tóc nặng bết, xẹp sát da đầu, nhanh đổ dầu nhờn chỉ sau 1 ngày gội. Lỗ chân lông dễ bít tắc.</p>
+                <p style={{ marginTop: "4px" }}><strong>Nguyên nhân:</strong> Tuyến bã nhờn dưới da đầu hoạt động quá mức do nội tiết hoặc môi trường.</p>
+              </div>
+              <div style={{ marginTop: "8px", paddingTop: "8px", borderTop: "1px solid var(--lush-gray-medium)", fontSize: "0.85rem" }}>
+                <strong style={{ color: "var(--lush-green)", display: "block", marginBottom: "4px" }}>💡 GIẢI PHÁP TỪ LUSH:</strong>
+                Làm sạch sâu bã nhờn, kiềm dầu nhẹ và tẩy tế bào chết da đầu. Sử dụng mặt nạ da đầu bạc hà <strong>Roots</strong> và dầu gội muối biển <strong>Big</strong> tạo phồng chân tóc.
+              </div>
+            </div>
+
+            {/* Combination Scalp */}
+            <div className="lush-card" style={{ display: "flex", flexDirection: "column", gap: "12px", borderLeft: "8px solid var(--lush-gold)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span className="lush-tag dark">DA HỖN HỢP</span>
+                <span style={{ fontSize: "1.5rem" }}>⚖️</span>
+              </div>
+              <div style={{ fontSize: "0.85rem", color: "#444" }}>
+                <p><strong>Triệu chứng:</strong> Tình trạng da đầu thay đổi thất thường theo mùa. Thường bị đổ dầu vùng đỉnh đầu (vùng chữ T) nhưng lại bị khô căng hoặc nhạy cảm ở vùng hai bên thái dương và sau gáy.</p>
+                <p style={{ marginTop: "4px" }}><strong>Nguyên nhân:</strong> Sự phân bổ hoạt động tuyến bã nhờn không đồng đều ở các khu vực trên da đầu.</p>
+              </div>
+              <div style={{ marginTop: "8px", paddingTop: "8px", borderTop: "1px solid var(--lush-gray-medium)", fontSize: "0.85rem" }}>
+                <strong style={{ color: "var(--lush-gold)", display: "block", marginBottom: "4px" }}>💡 GIẢI PHÁP TỪ LUSH:</strong>
+                Chăm sóc phân vùng chuyên biệt. Làm sạch dầu đỉnh đầu bằng <strong>Roots</strong>, gội cân bằng dịu nhẹ bằng <strong>Fairly Traded Honey</strong> và chỉ dùng dầu xả <strong>Veganese</strong> ở phần đuôi tóc.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Row 3: Restoration & Herbs */}
+        <div className="grid-split">
+          
+          {/* LUSH 3 Pillars of Restoration */}
+          <div className="lush-card" style={{ display: "flex", flexDirection: "column", gap: "16px", height: "100%" }}>
+            <h3 style={{ fontSize: "1.2rem", borderBottom: "2px solid #000", paddingBottom: "10px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span>🛡️</span> Ba Trụ Cột Phục Hồi Tận Gốc LUSH
+            </h3>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: "14px", fontSize: "0.85rem" }}>
+              <div>
+                <strong style={{ color: "var(--lush-green)", textTransform: "uppercase", fontSize: "0.8rem", display: "block", marginBottom: "2px" }}>
+                  1. PROTEIN - Phục Hồi Cấu Trúc
+                </strong>
+                Sử dụng lúa mì thủy phân hoặc Aquafaba để lấp đầy các hư tổn trên biểu bì tóc uốn, uốn/tẩy/nhuộm.
+                <div style={{ marginTop: "4px" }}>
+                  <span className="lush-tag green" style={{ fontSize: "0.7rem", padding: "1px 5px" }}>Sản phẩm tiêu biểu: POWER</span>
+                </div>
+              </div>
+
+              <div style={{ borderTop: "1px dashed var(--lush-gray-medium)", paddingTop: "10px" }}>
+                <strong style={{ color: "var(--lush-gold)", textTransform: "uppercase", fontSize: "0.8rem", display: "block", marginBottom: "2px" }}>
+                  2. MOISTURE - Cấp Ẩm & Làm Mềm
+                </strong>
+                Sử dụng các loại bơ thực vật và dầu thực vật tự nhiên (hạnh nhân, bơ quả bơ) thẩm thấu vào thân tóc giúp tóc mềm mượt, đàn hồi và bóng khỏe.
+                <div style={{ marginTop: "4px" }}>
+                  <span className="lush-tag gold" style={{ fontSize: "0.7rem", padding: "1px 5px" }}>Sản phẩm tiêu biểu: BALANCE</span>
+                </div>
+              </div>
+
+              <div style={{ borderTop: "1px dashed var(--lush-gray-medium)", paddingTop: "10px" }}>
+                <strong style={{ color: "#333", textTransform: "uppercase", fontSize: "0.8rem", display: "block", marginBottom: "2px" }}>
+                  3. CONDITION - Làm Mượt Biểu Bì
+                </strong>
+                Sử dụng các hoạt chất chống tĩnh điện tự nhiên giúp khép chặt vảy biểu bì tóc, ngăn ngừa xơ rối tức thì.
+                <div style={{ marginTop: "4px" }}>
+                  <span className="lush-tag dark" style={{ fontSize: "0.7rem", padding: "1px 5px" }}>Sản phẩm tiêu biểu: HAPPY HAPPY JOY JOY</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Core Herbal Ingredients */}
+          <div className="lush-card" style={{ display: "flex", flexDirection: "column", gap: "16px", height: "100%" }}>
+            <h3 style={{ fontSize: "1.2rem", borderBottom: "2px solid #000", paddingBottom: "10px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span>🌿</span> Thành Phần Thảo Mộc Cốt Lõi & Lợi Ích
+            </h3>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: "14px", fontSize: "0.85rem" }}>
+              <div>
+                <strong style={{ color: "var(--lush-red)", textTransform: "uppercase", fontSize: "0.8rem", display: "block", marginBottom: "2px" }}>
+                  🍂 Thanh Quế (Cinnamon)
+                </strong>
+                Kích thích các mạch máu tuần hoàn dưới da đầu, kích hoạt nang tóc hoạt động mạnh mẽ để thúc đẩy mọc tóc nhanh và khỏe mạnh.
+                <div style={{ marginTop: "4px" }}>
+                  <span className="lush-tag dark" style={{ fontSize: "0.7rem", padding: "1px 5px", background: "var(--lush-red)", borderColor: "var(--lush-red)" }}>Bánh gội mọc tóc: NEW SHAMPOO BAR</span>
+                </div>
+              </div>
+
+              <div style={{ borderTop: "1px dashed var(--lush-gray-medium)", paddingTop: "10px" }}>
+                <strong style={{ color: "var(--lush-green)", textTransform: "uppercase", fontSize: "0.8rem", display: "block", marginBottom: "2px" }}>
+                  🍃 Bạc Hà Tươi (Peppermint)
+                </strong>
+                Sát trùng tự nhiên, làm sạch gàu nấm và bã nhờn, đem lại cảm giác mát lạnh sảng khoái và ngăn ngừa rụng chân tóc rõ rệt.
+                <div style={{ marginTop: "4px" }}>
+                  <span className="lush-tag green" style={{ fontSize: "0.7rem", padding: "1px 5px" }}>Mặt nạ da đầu: ROOTS</span>
+                </div>
+              </div>
+
+              <div style={{ borderTop: "1px dashed var(--lush-gray-medium)", paddingTop: "10px" }}>
+                <strong style={{ color: "var(--lush-gold)", textTransform: "uppercase", fontSize: "0.8rem", display: "block", marginBottom: "2px" }}>
+                  🌸 Hoa Oải Hương (Lavender)
+                </strong>
+                Làm dịu và cân bằng lượng dầu tự nhiên vùng da đầu đỏ nhạy cảm, viêm ngứa, mang lại cảm giác thư thái dễ chịu.
+                <div style={{ marginTop: "4px" }}>
+                  <span className="lush-tag gold" style={{ fontSize: "0.7rem", padding: "1px 5px" }}>Dầu xả làm dịu: VEGANESE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </div>
