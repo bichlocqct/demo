@@ -221,7 +221,7 @@ export default function ScalpClassifier() {
         </p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: "32px", alignItems: "start" }}>
+      <div className="grid-split-classifier">
         
         {/* Left Column: Quiz Options */}
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>

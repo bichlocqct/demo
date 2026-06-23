@@ -216,3 +216,125 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--lush-white);
   margin-top: 60px;
 }
+
+/* Responsive Grid Split (2 columns on desktop, 1 column on mobile) */
+.grid-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .grid-split {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+/* Custom Grid Split for Classifier which is 1fr 1.2fr */
+.grid-split-classifier {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .grid-split-classifier {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+/* Custom Grid Split for CampaignReport which is 1fr 1.3fr */
+.grid-split-report {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .grid-split-report {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+/* Tabs list scroll wrapper */
+.tabs-scroll {
+  display: flex;
+  border-bottom: 3px solid var(--lush-black);
+  margin-bottom: 32px;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+.tabs-scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+.tabs-scroll .tab-btn {
+  white-space: nowrap;
+}
+
+/* Responsive header container */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .header-container {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  .header-container div {
+    text-align: center !important;
+  }
+}
+
+/* Responsive footer container */
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 600px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  .footer-container div {
+    text-align: center !important;
+  }
+}
+
+/* Responsive card styling */
+@media (max-width: 600px) {
+  .lush-card {
+    padding: 16px;
+    box-shadow: 4px 4px 0px #000000;
+  }
+  .lush-card:hover {
+    box-shadow: 5px 5px 0px #000000;
+    transform: translate(-1px, -1px);
+  }
+  .container {
+    padding: 0 16px;
+  }
+  main {
+    padding: 20px 0 !important;
+  }
+}
+

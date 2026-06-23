@@ -14,7 +14,7 @@ export default function Home() {
       
       {/* LUSH Top Stark Header */}
       <header className="header">
-        <div className="container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
+        <div className="container header-container">
           <div>
             <span className="sub-title" style={{ color: "#666" }}>LUSH Cửa Hàng & Đào Tạo</span>
             <h1 style={{ fontSize: "2rem", margin: "4px 0 0", color: "#000", fontWeight: "900", letterSpacing: "-1px" }}>
@@ -33,14 +33,7 @@ export default function Home() {
         <div className="container">
           
           {/* Main Navigation Tabs */}
-          <div style={{ 
-            display: "flex", 
-            borderBottom: "3px solid var(--lush-black)", 
-            marginBottom: "32px",
-            gap: "8px",
-            overflowX: "auto",
-            scrollbarWidth: "none"
-          }}>
+          <div className="tabs-scroll">
             <button 
               className={`tab-btn ${activeTab === "scanner" ? "active" : ""}`}
               onClick={() => setActiveTab("scanner")}
@@ -92,7 +85,7 @@ export default function Home() {
 
       {/* LUSH Footnote */}
       <footer className="footer">
-        <div className="container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "24px", fontSize: "0.8rem" }}>
+        <div className="container footer-container">
           <div>
             <h3 style={{ fontFamily: "var(--font-sans)", fontWeight: "800", fontSize: "1rem", color: "#fff", marginBottom: "8px" }}>
               LUSH VIETNAM

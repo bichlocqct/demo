@@ -10,7 +10,8 @@ export default function ScannerGuide() {
     {
       title: "Bước 1: Lắp Đế Màn Hình",
       desc: "Gắn phần đế của màn hình vào màn hình chính thông qua rãnh ở phía sau màn hình. Đảm bảo khít chặt để màn hình đứng vững.",
-      image: "/assembly_diagram.png"
+      image: "/device_back.png",
+      isPhoto: true
     },
     {
       title: "Bước 2: Kết Nối Đầu Soi",
@@ -28,7 +29,8 @@ export default function ScannerGuide() {
     {
       title: "Bước 1: Cấp Nguồn",
       desc: "Tiến hành cắm đầu sạc điện vào ổ điện. Đèn báo sạc hoặc màn hình sẽ hiển thị tín hiệu có nguồn điện đi vào.",
-      image: "/assembly_diagram.png"
+      image: "/device_back.png",
+      isPhoto: true
     },
     {
       title: "Bước 2: Khởi Động Máy",
@@ -64,7 +66,7 @@ export default function ScannerGuide() {
     <div className="fade-in" style={{ display: "grid", gridTemplateColumns: "1fr", gap: "32px" }}>
       
       {/* Sub-navigation tabs */}
-      <div style={{ display: "flex", borderBottom: "1px solid var(--lush-gray-medium)", paddingBottom: "8px", gap: "16px" }}>
+      <div style={{ display: "flex", borderBottom: "1px solid var(--lush-gray-medium)", paddingBottom: "8px", gap: "16px", overflowX: "auto", scrollbarWidth: "none" }}>
         <button 
           className={`tab-btn ${activeSubTab === "assembly" ? "active" : ""}`}
           onClick={() => handleSubTabChange("assembly")}
@@ -79,7 +81,7 @@ export default function ScannerGuide() {
         </button>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px", alignItems: "start" }}>
+      <div className="grid-split">
         
         {/* Left column: Step Content */}
         <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -155,7 +157,7 @@ export default function ScannerGuide() {
               alt={currentStepData.title}
               width={260} 
               height={260}
-              style={{ objectFit: "contain", filter: "grayscale(100%)" }}
+              style={{ objectFit: "contain", filter: currentStepData.isPhoto ? "none" : "grayscale(100%)" }}
             />
             <div style={{ 
               position: "absolute", 
