@@ -51,7 +51,9 @@ export default function ScannerGuide() {
     {
       title: "Bước 4: Soi & Đánh Giá",
       desc: "Từ từ đưa máy đến vùng da cần soi và bắt đầu soi từng chi tiết, đánh giá tình trạng da đầu của khách hàng để chẩn đoán đúng routine.",
-      image: "/usage_diagram.png"
+      image: "/scanner_screen.jpg",
+      isPhoto: true,
+      objectFit: "contain"
     },
     {
       title: "Bước 5: Chụp Ảnh Màn Hình",
