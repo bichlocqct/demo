@@ -41,33 +41,56 @@ export default function CampaignReport() {
   // Fetch reports on mount
   const fetchReports = async () => {
     try {
-      // Load local reports from localStorage
+      // 1. Get cached reports from localStorage
       const localReportsStr = localStorage.getItem("lush_campaign_reports");
-      const localReports = localReportsStr ? JSON.parse(localReportsStr) : [];
+      let localReports = localReportsStr ? JSON.parse(localReportsStr) : [];
+      
+      // Filter out any unsynced offline reports
+      let offlineReports = localReports.filter(r => r && r.isOffline === true);
+      let remainingOffline = [];
 
-      const res = await fetch("/api/reports");
-      let apiReports = [];
-      if (res.ok) {
-        apiReports = await res.json();
-      }
-
-      // Merge and deduplicate by id
-      const allReports = [...localReports, ...apiReports];
-      const uniqueReports = [];
-      const seenIds = new Set();
-      for (const r of allReports) {
-        if (r && r.id && !seenIds.has(r.id)) {
-          seenIds.add(r.id);
-          uniqueReports.push(r);
+      // 2. Try to sync offline reports to server
+      if (offlineReports.length > 0) {
+        for (const report of offlineReports) {
+          try {
+            // Remove local temporary fields before sending to API
+            const { id, isOffline, createdAt, ...payload } = report;
+            const syncRes = await fetch("/api/reports", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload)
+            });
+            if (!syncRes.ok) {
+              remainingOffline.push(report);
+            }
+          } catch (syncErr) {
+            console.error("Failed to sync offline report:", syncErr);
+            remainingOffline.push(report);
+          }
         }
       }
 
-      // Sort by date or createdAt descending (newest first)
-      uniqueReports.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
-      setReports(uniqueReports);
+      // 3. Fetch latest from API
+      const res = await fetch("/api/reports");
+      if (res.ok) {
+        const apiReports = await res.json();
+        
+        // Merge API reports and remaining unsynced offline reports
+        const mergedReports = [...remainingOffline, ...apiReports];
+        
+        // Sort by date or createdAt descending (newest first)
+        mergedReports.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
+        
+        setReports(mergedReports);
+        
+        // Overwrite localStorage cache with the updated clean list
+        localStorage.setItem("lush_campaign_reports", JSON.stringify(mergedReports));
+      } else {
+        throw new Error("API response not OK");
+      }
     } catch (err) {
-      console.error("Error fetching reports:", err);
-      // Fallback to localStorage only if API fails
+      console.error("Error fetching reports, using local storage fallback:", err);
+      // Fallback: Read current local storage
       const localReportsStr = localStorage.getItem("lush_campaign_reports");
       if (localReportsStr) {
         try {
@@ -75,7 +98,7 @@ export default function CampaignReport() {
           localReports.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
           setReports(localReports);
         } catch (e) {
-          console.error(e);
+          console.error("Error parsing local reports:", e);
         }
       }
     } finally {
@@ -138,48 +161,35 @@ export default function CampaignReport() {
         body: JSON.stringify(newReport)
       });
 
-      let savedReport = null;
       if (res.ok) {
-        savedReport = await res.json();
+        // Clear fields
+        setCustomerName("");
+        setCustomerPhone("");
+        setSymptoms([]);
+        setRoutine("");
+        setPurchased(true);
+        setFeedback("");
+        setConsentNghiDinh13(false);
+        
+        // Reload list from server, which will also update cache
+        await fetchReports();
+        alert("Lưu phiếu thông tin khách hàng thành công!");
       } else {
-        // Fallback for offline / direct local save
-        savedReport = {
-          id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
-          createdAt: new Date().toISOString(),
-          ...newReport
-        };
+        throw new Error("Failed to save report to server");
       }
-
-      if (savedReport) {
-        // Save to localStorage
-        const localReportsStr = localStorage.getItem("lush_campaign_reports");
-        const localReports = localReportsStr ? JSON.parse(localReportsStr) : [];
-        localReports.push(savedReport);
-        localStorage.setItem("lush_campaign_reports", JSON.stringify(localReports));
-      }
-
-      // Clear fields
-      setCustomerName("");
-      setCustomerPhone("");
-      setSymptoms([]);
-      setRoutine("");
-      setPurchased(true);
-      setFeedback("");
-      setConsentNghiDinh13(false);
-      // Reload list
-      await fetchReports();
-      alert("Lưu phiếu thông tin khách hàng thành công!");
     } catch (err) {
-      console.error(err);
-      // Even if network request fails, save it locally!
-      const savedReport = {
-        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+      console.error("Error saving report, using local fallback:", err);
+      // Save locally with isOffline: true
+      const offlineReport = {
+        id: "offline_" + Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
         createdAt: new Date().toISOString(),
+        isOffline: true,
         ...newReport
       };
+      
       const localReportsStr = localStorage.getItem("lush_campaign_reports");
       const localReports = localReportsStr ? JSON.parse(localReportsStr) : [];
-      localReports.push(savedReport);
+      localReports.push(offlineReport);
       localStorage.setItem("lush_campaign_reports", JSON.stringify(localReports));
 
       setCustomerName("");
@@ -189,6 +199,7 @@ export default function CampaignReport() {
       setPurchased(true);
       setFeedback("");
       setConsentNghiDinh13(false);
+      
       await fetchReports();
       alert("Lưu phiếu thành công! (Lưu cục bộ trên trình duyệt do lỗi mạng)");
     } finally {
@@ -203,26 +214,31 @@ export default function CampaignReport() {
 
     try {
       // 1. Delete from API
-      await fetch(`/api/reports?id=${id}`, { method: "DELETE" });
-    } catch (err) {
-      console.error("Error calling delete API:", err);
-    }
-
-    // 2. Delete from localStorage
-    try {
-      const localReportsStr = localStorage.getItem("lush_campaign_reports");
-      if (localReportsStr) {
-        const localReports = JSON.parse(localReportsStr);
-        const updated = localReports.filter(r => r.id !== id);
-        localStorage.setItem("lush_campaign_reports", JSON.stringify(updated));
+      const res = await fetch(`/api/reports?id=${id}`, { method: "DELETE" });
+      if (res.ok) {
+        // 2. Reload from API (which will also update localStorage cache)
+        await fetchReports();
+      } else {
+        throw new Error("Failed to delete from server");
       }
     } catch (err) {
-      console.error("Error updating localStorage on delete:", err);
+      console.error("Error calling delete API, falling back to local deletion:", err);
+      
+      // Fallback: Delete from local storage cache so UI updates immediately
+      const localReportsStr = localStorage.getItem("lush_campaign_reports");
+      if (localReportsStr) {
+        try {
+          const localReports = JSON.parse(localReportsStr);
+          const updated = localReports.filter(r => r && r.id !== id);
+          localStorage.setItem("lush_campaign_reports", JSON.stringify(updated));
+          setReports(updated);
+        } catch (e) {
+          console.error("Error updating local storage cache on delete:", e);
+        }
+      }
     }
-
-    // 3. Reload list
-    await fetchReports();
   };
+
 
   const getSymptomLabel = (id) => {
     const found = symptomsList.find(s => s.id === id);
