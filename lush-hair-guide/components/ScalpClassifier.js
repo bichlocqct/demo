@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function ScalpClassifier() {
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
@@ -47,6 +48,7 @@ export default function ScalpClassifier() {
       type: "Da đầu thường / Cân bằng",
       desc: "Da đầu khỏe mạnh, tuyến bã nhờn và độ ẩm ở mức lý tưởng. Màng bảo vệ tự nhiên hoạt động tốt, nang tóc thông thoáng.",
       issues: "Không có vấn đề lớn. Cần duy trì cân bằng độ ẩm và nuôi dưỡng tóc chắc khỏe.",
+      image: "/scalp_normal.png",
       routine: [
         {
           step: "Bước 1: Scalp Treatment",
@@ -76,6 +78,7 @@ export default function ScalpClassifier() {
         type: "Da đầu hỗn hợp (Combination Scalp)",
         desc: "Tình trạng da đầu đổ nhiều dầu ở vùng đỉnh đầu nhưng lại bị khô ráp, bong tróc hoặc nhạy cảm ở vùng hai bên thái dương và sau gáy. Tình trạng này thay đổi thất thường theo thời tiết và mùa trong năm.",
         issues: "Phân bổ bã nhờn không đồng đều, nang tóc vùng đỉnh dễ bết tắc trong khi vùng bên cạnh thiếu độ ẩm tự nhiên.",
+        image: "/scalp_combination.png",
         routine: [
           {
             step: "Bước 1: Scalp Treatment",
@@ -102,6 +105,7 @@ export default function ScalpClassifier() {
         type: "Da đầu gàu & ngứa nấm (Dandruff / Flaky Scalp)",
         desc: "Xuất hiện vảy gàu dày bám dính, ngứa ngáy dữ dội do sự phát triển quá mức của nấm Malassezia kết hợp bã nhờn.",
         issues: "Ngứa rát nang tóc, bong tróc mảng gàu lớn, có nguy cơ gây viêm da tiết bã.",
+        image: "/scalp_dandruff.png",
         routine: [
           {
             step: "Bước 1: Scalp Treatment",
@@ -128,6 +132,7 @@ export default function ScalpClassifier() {
         type: "Da đầu dầu & bết dính (Oily Scalp)",
         desc: "Tuyến bã nhờn hoạt động quá mức gây đổ dầu nhiều, làm bít tắc các nang tóc, khiến sợi tóc bị xẹp dính và dễ sinh mụn da đầu.",
         issues: "Bết tóc nhanh chóng (trong vòng 1 ngày sau gội), ngứa bết, mùi dầu hôi, lỗ chân lông bít tắc gây rụng tóc.",
+        image: "/scalp_oily.png",
         routine: [
           {
             step: "Bước 1: Scalp Treatment",
@@ -154,6 +159,7 @@ export default function ScalpClassifier() {
         type: "Da đầu nhạy cảm & kích ứng (Sensitive Scalp)",
         desc: "Lớp màng bảo vệ da đầu bị tổn thương, dễ bị đỏ ửng, viêm ngứa hoặc châm chích rát khi tiếp xúc hóa chất, khói bụi.",
         issues: "Ửng đỏ dưới nang tóc, ngứa râm ran, rát nhẹ khi gội đầu. Cần sản phẩm cực kỳ dịu lành, không cồn/hóa chất mạnh.",
+        image: "/scalp_sensitive.png",
         routine: [
           {
             step: "Bước 1: Scalp Treatment",
@@ -180,6 +186,7 @@ export default function ScalpClassifier() {
         type: "Da đầu khô & thiếu ẩm (Dry Scalp)",
         desc: "Da đầu thiếu hụt dầu tự nhiên và độ ẩm, khiến da căng chặt, dễ bong tróc các vảy khô li ti giống gàu nhưng không nhờn.",
         issues: "Sợi tóc khô xơ chẻ ngọn, da đầu ngứa khô, hay bị bong tróc vảy da chết nhỏ khi chải đầu.",
+        image: "/scalp_dry.png",
         routine: [
           {
             step: "Bước 1: Scalp Treatment",
@@ -206,6 +213,7 @@ export default function ScalpClassifier() {
         type: "Da đầu yếu & Rụng tóc nhiều (Hair Loss / Thinning Scalp)",
         desc: "Nang tóc bị thiếu dưỡng chất, lưu thông máu dưới da đầu kém, vòng đời sợi tóc bị rút ngắn khiến tóc rụng nhiều và thưa thớt.",
         issues: "Tóc rụng chân trắng nhiều, nang tóc teo nhỏ, mật độ tóc giảm. Cần kích thích tuần hoàn máu để nuôi dưỡng chân tóc.",
+        image: "/scalp_loss.png",
         routine: [
           {
             step: "Bước 1: Scalp Treatment",
@@ -317,6 +325,37 @@ export default function ScalpClassifier() {
                     </p>
                   </div>
                 </div>
+
+                {/* Scalp Image Illustration */}
+                {diagnosis.image && (
+                  <div style={{
+                    border: "3px solid var(--lush-black)",
+                    height: "220px",
+                    position: "relative",
+                    overflow: "hidden"
+                  }}>
+                    <Image
+                      src={diagnosis.image}
+                      alt={diagnosis.type}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                    <div style={{
+                      position: "absolute",
+                      bottom: "10px",
+                      right: "10px",
+                      fontSize: "0.75rem",
+                      fontWeight: "bold",
+                      textTransform: "uppercase",
+                      background: "#000",
+                      color: "#fff",
+                      padding: "4px 8px"
+                    }}>
+                      Hình Ảnh Soi Da Đầu Thực Tế
+                    </div>
+                  </div>
+                )}
 
                 {/* LUSH Routine Recommendation */}
                 <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -511,6 +550,15 @@ export default function ScalpClassifier() {
                 <span className="lush-tag dark">DA KHÔ</span>
                 <span style={{ fontSize: "1.5rem" }}>🍂</span>
               </div>
+              <div style={{ position: "relative", height: "140px", border: "1px solid var(--lush-gray-medium)", overflow: "hidden", margin: "4px 0" }}>
+                <Image
+                  src="/scalp_dry.png"
+                  alt="Da đầu khô minh họa"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
               <div style={{ fontSize: "0.85rem", color: "#444" }}>
                 <p><strong>Triệu chứng:</strong> Căng chặt da đầu, khó chịu, bong tróc vảy khô mảng lớn. Sợi tóc thường khô xơ và dễ chẻ ngọn.</p>
                 <p style={{ marginTop: "4px" }}><strong>Nguyên nhân:</strong> Thiếu dầu tự nhiên để duy trì độ ẩm cần thiết cho lớp màng bảo vệ da đầu.</p>
@@ -526,6 +574,15 @@ export default function ScalpClassifier() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span className="lush-tag dark">DA DẦU</span>
                 <span style={{ fontSize: "1.5rem" }}>💧</span>
+              </div>
+              <div style={{ position: "relative", height: "140px", border: "1px solid var(--lush-gray-medium)", overflow: "hidden", margin: "4px 0" }}>
+                <Image
+                  src="/scalp_oily.png"
+                  alt="Da đầu dầu minh họa"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  style={{ objectFit: "cover" }}
+                />
               </div>
               <div style={{ fontSize: "0.85rem", color: "#444" }}>
                 <p><strong>Triệu chứng:</strong> Tóc nặng bết, xẹp sát da đầu, nhanh đổ dầu nhờn chỉ sau 1 ngày gội. Lỗ chân lông dễ bít tắc.</p>
@@ -543,13 +600,22 @@ export default function ScalpClassifier() {
                 <span className="lush-tag dark">DA HỖN HỢP</span>
                 <span style={{ fontSize: "1.5rem" }}>⚖️</span>
               </div>
+              <div style={{ position: "relative", height: "140px", border: "1px solid var(--lush-gray-medium)", overflow: "hidden", margin: "4px 0" }}>
+                <Image
+                  src="/scalp_combination.png"
+                  alt="Da đầu hỗn hợp minh họa"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
               <div style={{ fontSize: "0.85rem", color: "#444" }}>
                 <p><strong>Triệu chứng:</strong> Tình trạng da đầu thay đổi thất thường theo mùa. Thường bị đổ dầu vùng đỉnh đầu (vùng chữ T) nhưng lại bị khô căng hoặc nhạy cảm ở vùng hai bên thái dương và sau gáy.</p>
                 <p style={{ marginTop: "4px" }}><strong>Nguyên nhân:</strong> Sự phân bổ hoạt động tuyến bã nhờn không đồng đều ở các khu vực trên da đầu.</p>
               </div>
               <div style={{ marginTop: "8px", paddingTop: "8px", borderTop: "1px solid var(--lush-gray-medium)", fontSize: "0.85rem" }}>
                 <strong style={{ color: "var(--lush-gold)", display: "block", marginBottom: "4px" }}>💡 GIẢI PHÁP TỪ LUSH:</strong>
-                Chăm sóc phân vùng chuyên biệt. Làm sạch dầu đỉnh đầu bằng <strong>Roots</strong>, gội cân bằng dịu nhẹ bằng <strong>Fairly Traded Honey</strong> và chỉ dùng dầu xả <strong>Veganese</strong> ở phần đuôi tóc.
+                Chăm sóc phân vùng chuyên biệt. Làm sạch dầu đỉnh đầu bằng <strong>Roots</strong>, gội cân bằng dịu nhẹ bằng <strong>Fairly Traded Honey</strong> and chỉ dùng dầu xả <strong>Veganese</strong> ở phần đuôi tóc.
               </div>
             </div>
 
