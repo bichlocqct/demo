@@ -15,7 +15,7 @@ export default function ScannerGuide() {
     },
     {
       title: "Bước 2: Kết Nối Đầu Soi",
-      desc: "Dùng dây cắm ở phần đầu soi da gắn vào dây màu trắng đi cùng với màn hình. Đẩy nhẹ và vặn nắp bảo vệ nếu có để kết nối chắc chắn.",
+      desc: "Dùng dây cắm ở phần đầu soi da đầu gắn vào dây màu trắng đi cùng với màn hình. Đẩy nhẹ và vặn nắp bảo vệ nếu có để kết nối chắc chắn.",
       image: "/connect_scanner.jpg",
       isPhoto: true
     },
@@ -43,7 +43,7 @@ export default function ScannerGuide() {
     },
     {
       title: "Bước 3: Chọn Chức Năng Soi",
-      desc: "Cầm đầu soi da và ấn nút điều khiển đầu tiên ở cạnh ngón cái. Mỗi lần ấn sẽ tương ứng với 1 trong 3 chức năng theo thứ tự:\n\n• Ấn lần 1 (White Light): Soi bề mặt tóc, lượng dầu và gàu bết.\n• Ấn lần 2 (Polarized Light): Xem sâu nang tóc, tình trạng viêm đỏ.\n• Ấn lần 3 (UV/Blue Light): Phát hiện nấm da đầu, bã nhờn ẩn sâu.",
+      desc: "Cầm đầu soi da đầu và ấn nút điều khiển đầu tiên ở cạnh ngón cái. Mỗi lần ấn sẽ tương ứng với 1 trong 3 chức năng theo thứ tự:\n\n• Ấn lần 1 (White Light): Soi bề mặt tóc, lượng dầu và gàu bết.\n• Ấn lần 2 (Polarized Light): Xem sâu nang tóc, tình trạng viêm đỏ.\n• Ấn lần 3 (UV/Blue Light): Phát hiện nấm da đầu, bã nhờn ẩn sâu.",
       image: "/probe_button.jpg",
       isPhoto: true,
       objectFit: "contain"
@@ -207,7 +207,7 @@ export default function ScannerGuide() {
               />
             </div>
             <span style={{ fontSize: "0.75rem", color: "#666", fontStyle: "italic" }}>
-              💡 Mẹo: Nhân viên mới bắt buộc xem hết video này trước khi thực hành soi da cho khách hàng.
+              💡 Mẹo: Nhân viên mới bắt buộc xem hết video này trước khi thực hành soi da đầu cho khách hàng.
             </span>
           </div>
 

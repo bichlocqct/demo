@@ -226,9 +226,9 @@ export default function CampaignReport() {
       
       {/* Header */}
       <div style={{ borderBottom: "1px solid var(--lush-gray-medium)", paddingBottom: "12px" }}>
-        <h2 style={{ fontSize: "1.5rem" }}>Phiếu Thông Tin Khách Hàng Soi Da</h2>
+        <h2 style={{ fontSize: "1.5rem" }}>Phiếu Thông Tin Khách Hàng Soi Da Đầu</h2>
         <p style={{ color: "#666", fontSize: "0.9rem" }}>
-          Nhập thông tin khách hàng tham gia workshop soi da và quản lý kết quả tư vấn sản phẩm LUSH tại các cửa hàng.
+          Nhập thông tin khách hàng tham gia workshop soi da đầu và quản lý kết quả tư vấn sản phẩm LUSH tại các cửa hàng.
         </p>
       </div>
 
@@ -240,7 +240,7 @@ export default function CampaignReport() {
           <span className="sub-title" style={{ color: "#666" }}>Tổng số khách đã tham gia</span>
           <div style={{ fontSize: "2.2rem", fontWeight: "800" }}>{totalCustomers}</div>
           <span style={{ fontSize: "0.75rem", color: "var(--lush-green)", background: "var(--lush-green-light)", padding: "4px 8px", alignSelf: "flex-start", fontWeight: "600" }}>
-            👥 Khách trải nghiệm soi da
+            👥 Khách trải nghiệm soi da đầu
           </span>
         </div>
 
