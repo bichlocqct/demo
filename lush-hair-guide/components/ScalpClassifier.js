@@ -229,7 +229,7 @@ export default function ScalpClassifier() {
           },
           {
             step: "Bước 3: Leave-in",
-            name: "Superhero Milk",
+            name: "Super Milk",
             desc: "Xịt dưỡng leave-in chứa dầu hạnh nhân, bơ quả bơ giúp bao bọc bảo vệ sợi tóc mảnh yếu khỏi gãy rụng từ tác động bên ngoài.",
             usage: "Xịt lên tóc ẩm sau khi gội sạch và lau khô bằng khăn."
           }

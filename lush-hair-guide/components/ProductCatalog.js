@@ -42,8 +42,8 @@ export default function ProductCatalog() {
     {
       condition: "Da Đầu Yếu & Rụng Tóc Nhiều",
       icon: "📉",
-      routine: "Roots (Ủ kích thích) → New Shampoo Bar (Bánh gội mọc tóc) → Superhero Milk (Xịt dưỡng bảo vệ)",
-      usage: "1. Ủ mặt nạ Roots 15 phút trước gội, massage sâu chân tóc để tăng tuần hoàn máu.\n2. Tạo bọt bánh gội New gội sạch da đầu để quế đinh hương kích hoạt nang.\n3. Lau ráo tóc, xịt sữa dưỡng Superhero Milk lên thân tóc ẩm rồi sấy gió mát.",
+      routine: "Roots (Ủ kích thích) → New Shampoo Bar (Bánh gội mọc tóc) → Super Milk (Xịt dưỡng bảo vệ)",
+      usage: "1. Ủ mặt nạ Roots 15 phút trước gội, massage sâu chân tóc để tăng tuần hoàn máu.\n2. Tạo bọt bánh gội New gội sạch da đầu để quế đinh hương kích hoạt nang.\n3. Lau ráo tóc, xịt sữa dưỡng Super Milk lên thân tóc ẩm rồi sấy gió mát.",
       allergyWarning: "Bánh gội New chứa tinh dầu quế & đinh hương tự nhiên có tính làm ấm nóng da đầu, gây châm chích nhẹ và đỏ ửng tạm thời.",
       patchTest: "Bắt buộc patch test bọt của New Shampoo Bar sau tai khách 10 phút. Nếu đỏ ngứa dữ dội kéo dài thì đổi sang Rehab."
     },
@@ -158,7 +158,7 @@ export default function ProductCatalog() {
       usage: "Lấy một lượng nhỏ xoa ấm trên lòng bàn tay rồi bóp nhẹ lên tóc ẩm hoặc xoa mỏng lên da đầu khô ráp."
     },
     {
-      name: "Superhero Milk",
+      name: "Super Milk",
       category: "leavein",
       type: "Xịt Dưỡng Phục Hồi (Leave-in)",
       ingredients: "Sữa hạnh nhân + dầu olive + bơ quả bơ",
