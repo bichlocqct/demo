@@ -8,14 +8,22 @@ export default function CampaignReport() {
 
   // Form fields
   const [staffName, setStaffName] = useState("");
-  const [store, setStore] = useState("Saigon Centre");
+  const [store, setStore] = useState("Lush Saigon Center");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [scansCount, setScansCount] = useState("");
   const [routinesCount, setRoutinesCount] = useState("");
   const [bestSeller, setBestSeller] = useState("Fairly Traded Honey");
   const [feedback, setFeedback] = useState("");
 
-  const storesList = ["Saigon Centre", "Hanoi Centre", "Cửa hàng khác"];
+  const storesList = [
+    "Lush Saigon Center",
+    "Lush Vincom Đồng Khởi",
+    "Lush Hùng Vương Plaza",
+    "Lush Hà Nội Center",
+    "Lush Lotte Tây Hồ",
+    "Lush Aeon Hà Đông",
+    "Cửa hàng khác"
+  ];
   const productsList = [
     "Fairly Traded Honey",
     "Rehab",
