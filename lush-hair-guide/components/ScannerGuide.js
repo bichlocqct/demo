@@ -31,7 +31,7 @@ export default function ScannerGuide() {
     {
       title: "Bước 1: Cấp Nguồn",
       desc: "Tiến hành cắm đầu sạc điện vào ổ điện. Đèn báo sạc hoặc màn hình sẽ hiển thị tín hiệu có nguồn điện đi vào.",
-      image: "/device_back.png",
+      image: "/power_on.jpg",
       isPhoto: true
     },
     {
