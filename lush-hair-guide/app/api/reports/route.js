@@ -79,3 +79,26 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function DELETE(request) {
+  try {
+    ensureDatabase();
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    
+    if (!id) {
+      return NextResponse.json({ error: 'Missing report id' }, { status: 400 });
+    }
+
+    const fileContent = fs.readFileSync(dataFilePath, 'utf8');
+    let reports = JSON.parse(fileContent);
+    reports = reports.filter(r => r.id !== id);
+    
+    fs.writeFileSync(dataFilePath, JSON.stringify(reports, null, 2));
+    
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting report:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}

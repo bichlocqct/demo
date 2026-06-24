@@ -34,13 +34,43 @@ export default function CampaignReport() {
   // Fetch reports on mount
   const fetchReports = async () => {
     try {
+      // Load local reports from localStorage
+      const localReportsStr = localStorage.getItem("lush_campaign_reports");
+      const localReports = localReportsStr ? JSON.parse(localReportsStr) : [];
+
       const res = await fetch("/api/reports");
+      let apiReports = [];
       if (res.ok) {
-        const data = await res.json();
-        setReports(data.reverse()); // Show newest first
+        apiReports = await res.json();
       }
+
+      // Merge and deduplicate by id
+      const allReports = [...localReports, ...apiReports];
+      const uniqueReports = [];
+      const seenIds = new Set();
+      for (const r of allReports) {
+        if (r && r.id && !seenIds.has(r.id)) {
+          seenIds.add(r.id);
+          uniqueReports.push(r);
+        }
+      }
+
+      // Sort by date or createdAt descending (newest first)
+      uniqueReports.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
+      setReports(uniqueReports);
     } catch (err) {
       console.error("Error fetching reports:", err);
+      // Fallback to localStorage only if API fails
+      const localReportsStr = localStorage.getItem("lush_campaign_reports");
+      if (localReportsStr) {
+        try {
+          const localReports = JSON.parse(localReportsStr);
+          localReports.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
+          setReports(localReports);
+        } catch (e) {
+          console.error(e);
+        }
+      }
     } finally {
       setLoading(false);
     }
@@ -75,24 +105,84 @@ export default function CampaignReport() {
         body: JSON.stringify(newReport)
       });
 
+      let savedReport = null;
       if (res.ok) {
-        // Clear fields
-        setStaffName("");
-        setScansCount("");
-        setRoutinesCount("");
-        setFeedback("");
-        // Reload list
-        await fetchReports();
-        alert("Gửi báo cáo kết quả thành công!");
+        savedReport = await res.json();
       } else {
-        alert("Lỗi khi gửi báo cáo, vui lòng thử lại!");
+        // Fallback for offline / direct local save
+        savedReport = {
+          id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+          createdAt: new Date().toISOString(),
+          ...newReport
+        };
       }
+
+      if (savedReport) {
+        // Save to localStorage
+        const localReportsStr = localStorage.getItem("lush_campaign_reports");
+        const localReports = localReportsStr ? JSON.parse(localReportsStr) : [];
+        localReports.push(savedReport);
+        localStorage.setItem("lush_campaign_reports", JSON.stringify(localReports));
+      }
+
+      // Clear fields
+      setStaffName("");
+      setScansCount("");
+      setRoutinesCount("");
+      setFeedback("");
+      // Reload list
+      await fetchReports();
+      alert("Gửi báo cáo kết quả thành công!");
     } catch (err) {
       console.error(err);
-      alert("Lỗi kết nối server!");
+      // Even if network request fails, save it locally!
+      const savedReport = {
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+        createdAt: new Date().toISOString(),
+        ...newReport
+      };
+      const localReportsStr = localStorage.getItem("lush_campaign_reports");
+      const localReports = localReportsStr ? JSON.parse(localReportsStr) : [];
+      localReports.push(savedReport);
+      localStorage.setItem("lush_campaign_reports", JSON.stringify(localReports));
+
+      setStaffName("");
+      setScansCount("");
+      setRoutinesCount("");
+      setFeedback("");
+      await fetchReports();
+      alert("Gửi báo cáo kết quả thành công! (Lưu cục bộ trên trình duyệt)");
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm("Bạn có chắc chắn muốn xóa báo cáo này?")) {
+      return;
+    }
+
+    try {
+      // 1. Delete from API
+      await fetch(`/api/reports?id=${id}`, { method: "DELETE" });
+    } catch (err) {
+      console.error("Error calling delete API:", err);
+    }
+
+    // 2. Delete from localStorage
+    try {
+      const localReportsStr = localStorage.getItem("lush_campaign_reports");
+      if (localReportsStr) {
+        const localReports = JSON.parse(localReportsStr);
+        const updated = localReports.filter(r => r.id !== id);
+        localStorage.setItem("lush_campaign_reports", JSON.stringify(updated));
+      }
+    } catch (err) {
+      console.error("Error updating localStorage on delete:", err);
+    }
+
+    // 3. Reload list
+    await fetchReports();
   };
 
   // Aggregated KPIs
@@ -292,7 +382,29 @@ export default function CampaignReport() {
                       <span className="lush-tag dark" style={{ fontSize: "0.65rem", padding: "2px 6px" }}>{report.store}</span>
                       <h4 style={{ fontSize: "1.1rem", marginTop: "4px" }}>{report.staffName}</h4>
                     </div>
-                    <span style={{ fontSize: "0.8rem", color: "#666", fontWeight: "600" }}>{report.date}</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                      <span style={{ fontSize: "0.8rem", color: "#666", fontWeight: "600" }}>{report.date}</span>
+                      <button 
+                        onClick={() => handleDelete(report.id)}
+                        title="Xóa báo cáo"
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "0.95rem",
+                          padding: "2px 4px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          opacity: 0.7,
+                          transition: "opacity 0.2s"
+                        }}
+                        onMouseEnter={(e) => e.target.style.opacity = 1}
+                        onMouseLeave={(e) => e.target.style.opacity = 0.7}
+                      >
+                        🗑️
+                      </button>
+                    </div>
                   </div>
 
                   <div style={{ 
