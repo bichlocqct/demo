@@ -4,7 +4,6 @@ import Image from "next/image";
 import ScannerGuide from "../components/ScannerGuide";
 import ScalpClassifier from "../components/ScalpClassifier";
 import ProductCatalog from "../components/ProductCatalog";
-import TrainingChecklist from "../components/TrainingChecklist";
 import CampaignReport from "../components/CampaignReport";
 
 export default function Home() {
@@ -63,13 +62,6 @@ export default function Home() {
               🌿 Bản Đồ Sản Phẩm Tóc
             </button>
             <button 
-              className={`tab-btn ${activeTab === "checklist" ? "active" : ""}`}
-              onClick={() => setActiveTab("checklist")}
-              style={{ fontSize: "0.95rem" }}
-            >
-              🗓️ Lộ Trình 7 Ngày
-            </button>
-            <button 
               className={`tab-btn ${activeTab === "report" ? "active" : ""}`}
               onClick={() => setActiveTab("report")}
               style={{ fontSize: "0.95rem" }}
@@ -83,7 +75,6 @@ export default function Home() {
             {activeTab === "scanner" && <ScannerGuide />}
             {activeTab === "classifier" && <ScalpClassifier />}
             {activeTab === "catalog" && <ProductCatalog />}
-            {activeTab === "checklist" && <TrainingChecklist />}
             {activeTab === "report" && <CampaignReport />}
           </div>
 
