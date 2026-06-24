@@ -9,6 +9,7 @@ export default function CampaignReport() {
 
   // Form fields
   const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
   const [store, setStore] = useState("Lush Saigon Center");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [symptoms, setSymptoms] = useState([]);
@@ -119,6 +120,7 @@ export default function CampaignReport() {
     setSubmitting(true);
     const newReport = {
       customerName,
+      customerPhone,
       store,
       date,
       symptoms,
@@ -158,6 +160,7 @@ export default function CampaignReport() {
 
       // Clear fields
       setCustomerName("");
+      setCustomerPhone("");
       setSymptoms([]);
       setRoutine("");
       setPurchased(true);
@@ -180,6 +183,7 @@ export default function CampaignReport() {
       localStorage.setItem("lush_campaign_reports", JSON.stringify(localReports));
 
       setCustomerName("");
+      setCustomerPhone("");
       setSymptoms([]);
       setRoutine("");
       setPurchased(true);
@@ -282,17 +286,30 @@ export default function CampaignReport() {
             📝 Tạo Phiếu Khách Hàng Mới
           </h3>
 
-          {/* Customer Name */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            <label style={{ fontSize: "0.85rem", fontWeight: "700", textTransform: "uppercase" }}>Họ và Tên khách hàng *</label>
-            <input 
-              type="text" 
-              value={customerName} 
-              onChange={(e) => setCustomerName(e.target.value)} 
-              placeholder="Nhập tên khách hàng..."
-              required
-              style={{ padding: "10px", border: "2px solid #000", fontSize: "0.9rem", outline: "none" }}
-            />
+          {/* Customer Name & Phone */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              <label style={{ fontSize: "0.85rem", fontWeight: "700", textTransform: "uppercase" }}>Họ và Tên khách hàng *</label>
+              <input 
+                type="text" 
+                value={customerName} 
+                onChange={(e) => setCustomerName(e.target.value)} 
+                placeholder="Nhập tên khách hàng..."
+                required
+                style={{ padding: "10px", border: "2px solid #000", fontSize: "0.9rem", outline: "none" }}
+              />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              <label style={{ fontSize: "0.85rem", fontWeight: "700", textTransform: "uppercase" }}>Số điện thoại *</label>
+              <input 
+                type="tel" 
+                value={customerPhone} 
+                onChange={(e) => setCustomerPhone(e.target.value)} 
+                placeholder="Nhập số điện thoại..."
+                required
+                style={{ padding: "10px", border: "2px solid #000", fontSize: "0.9rem", outline: "none" }}
+              />
+            </div>
           </div>
 
           {/* Store & Date */}
@@ -712,6 +729,11 @@ export default function CampaignReport() {
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
                           <span style={{ fontWeight: "800", fontSize: "0.95rem" }}>
                             👤 {report.customerName || "Khách hàng ẩn danh"}
+                            {report.customerPhone && (
+                              <span style={{ fontSize: "0.8rem", color: "#666", fontWeight: "normal", marginLeft: "10px" }}>
+                                📞 {report.customerPhone}
+                              </span>
+                            )}
                             {report.consentNghiDinh13 && (
                               <span className="lush-tag green" style={{ fontSize: "0.6rem", padding: "1px 4px", marginLeft: "8px", verticalAlign: "middle" }}>✓ NĐ13</span>
                             )}

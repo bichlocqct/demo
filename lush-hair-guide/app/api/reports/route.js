@@ -50,7 +50,7 @@ export async function POST(request) {
     const body = await request.json();
     
     // Simple validation
-    const { customerName, store, date, symptoms, routine, purchased, feedback, staffName, consentNghiDinh13 } = body;
+    const { customerName, customerPhone, store, date, symptoms, routine, purchased, feedback, staffName, consentNghiDinh13 } = body;
     if (!customerName || !store || !date) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
@@ -59,6 +59,7 @@ export async function POST(request) {
       id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
       createdAt: new Date().toISOString(),
       customerName,
+      customerPhone: customerPhone || '',
       store,
       date,
       symptoms: symptoms || [],
