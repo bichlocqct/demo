@@ -5,6 +5,7 @@ export default function CampaignReport() {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [activeStoreTab, setActiveStoreTab] = useState(null);
 
   // Form fields
   const [customerName, setCustomerName] = useState("");
@@ -221,21 +222,6 @@ export default function CampaignReport() {
   const totalRoutines = reports.filter(r => r.routine && r.routine.trim() !== "").length;
   const totalPurchased = reports.filter(r => r.purchased === true || r.purchased === "true" || r.purchased === "yes").length;
 
-  const storeStats = storesList.map(storeName => {
-    const storeReports = reports.filter(r => r.store === storeName);
-    const customers = storeReports.length;
-    const routines = storeReports.filter(r => r.routine && r.routine.trim() !== "").length;
-    const purchased = storeReports.filter(r => r.purchased === true || r.purchased === "true" || r.purchased === "yes").length;
-    const purchaseRate = customers > 0 ? Math.round((purchased / customers) * 100) : 0;
-    return {
-      name: storeName,
-      customers,
-      routines,
-      purchased,
-      purchaseRate
-    };
-  }).sort((a, b) => b.customers - a.customers);
-
   return (
     <div className="fade-in" style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       
@@ -279,58 +265,179 @@ export default function CampaignReport() {
 
       </div>
 
-      {/* Store Statistics Table */}
-      <div className="lush-card" style={{ display: "flex", flexDirection: "column", gap: "12px", background: "#ffffff" }}>
+      {/* Store Summaries Section */}
+      <div className="lush-card" style={{ display: "flex", flexDirection: "column", gap: "20px", background: "#ffffff" }}>
         <h3 style={{ fontSize: "1.1rem", textTransform: "uppercase", borderBottom: "2px solid #000", paddingBottom: "8px", margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
-          <span>📊</span> Báo Cáo Hiệu Suất Theo Từng Cửa Hàng
+          <span>🏢</span> Tóm Tắt Hoạt Động Theo Cửa Hàng
         </h3>
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "500px" }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid #000", textAlign: "left" }}>
-                <th style={{ padding: "10px 8px", fontSize: "0.8rem", fontWeight: "800", textTransform: "uppercase" }}>Cửa Hàng</th>
-                <th style={{ padding: "10px 8px", fontSize: "0.8rem", fontWeight: "800", textTransform: "uppercase", textAlign: "center" }}>Khách Tham Gia</th>
-                <th style={{ padding: "10px 8px", fontSize: "0.8rem", fontWeight: "800", textTransform: "uppercase", textAlign: "center" }}>Routine Tư Vấn</th>
-                <th style={{ padding: "10px 8px", fontSize: "0.8rem", fontWeight: "800", textTransform: "uppercase", textAlign: "center" }}>Khách Đã Mua</th>
-                <th style={{ padding: "10px 8px", fontSize: "0.8rem", fontWeight: "800", textTransform: "uppercase", textAlign: "right" }}>Tỷ Lệ Mua Hàng</th>
-              </tr>
-            </thead>
-            <tbody>
-              {storeStats.map((stat, idx) => (
-                <tr 
-                  key={stat.name} 
-                  style={{ 
-                    borderBottom: "1px solid var(--lush-gray-medium)", 
-                    background: stat.customers > 0 ? "rgba(0,0,0,0.01)" : "transparent",
-                    transition: "background 0.2s"
-                  }}
-                >
-                  <td style={{ padding: "12px 8px", fontSize: "0.85rem", fontWeight: "700" }}>
-                    {stat.name}
-                  </td>
-                  <td style={{ padding: "12px 8px", fontSize: "0.9rem", fontWeight: "600", textAlign: "center" }}>
-                    {stat.customers}
-                  </td>
-                  <td style={{ padding: "12px 8px", fontSize: "0.9rem", color: "#555", textAlign: "center" }}>
-                    {stat.routines}
-                  </td>
-                  <td style={{ padding: "12px 8px", fontSize: "0.9rem", color: "var(--lush-green)", fontWeight: "600", textAlign: "center" }}>
-                    {stat.purchased}
-                  </td>
-                  <td style={{ padding: "12px 8px", fontSize: "0.9rem", fontWeight: "700", textAlign: "right" }}>
-                    {stat.customers > 0 ? (
-                      <span className="lush-tag green" style={{ fontSize: "0.7rem", padding: "2px 6px" }}>
-                        {stat.purchaseRate}%
-                      </span>
-                    ) : (
-                      <span style={{ color: "#aaa", fontSize: "0.85rem" }}>0%</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+        {/* Store Grid Selector */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
+          {storesList.map(storeName => {
+            const storeReports = reports.filter(r => r.store === storeName);
+            const customers = storeReports.length;
+            const purchased = storeReports.filter(r => r.purchased === true || r.purchased === "true" || r.purchased === "yes").length;
+            const isActive = activeStoreTab === storeName;
+
+            return (
+              <div 
+                key={storeName}
+                onClick={() => setActiveStoreTab(isActive ? null : storeName)}
+                style={{
+                  border: isActive ? "3px solid #000000" : "1px solid var(--lush-gray-medium)",
+                  background: isActive ? "var(--lush-black)" : "#ffffff",
+                  color: isActive ? "var(--lush-white)" : "var(--lush-black)",
+                  padding: "16px",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease-in-out",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "6px",
+                  position: "relative"
+                }}
+              >
+                <div style={{ fontWeight: "800", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                  {storeName}
+                </div>
+                <div style={{ display: "flex", gap: "10px", fontSize: "0.75rem", color: isActive ? "#ccc" : "#666", marginTop: "4px" }}>
+                  <span>Khách: <strong>{customers}</strong></span>
+                  <span>|</span>
+                  <span>Mua: <strong>{purchased}</strong></span>
+                </div>
+                <div style={{
+                  position: "absolute",
+                  bottom: "8px",
+                  right: "12px",
+                  fontSize: "0.8rem",
+                  opacity: 0.6
+                }}>
+                  {isActive ? "▼" : "▶"}
+                </div>
+              </div>
+            );
+          })}
         </div>
+
+        {/* Detailed Store View */}
+        {activeStoreTab && (() => {
+          const storeReports = reports.filter(r => r.store === activeStoreTab);
+          const customersCount = storeReports.length;
+          const purchasedCount = storeReports.filter(r => r.purchased === true || r.purchased === "true" || r.purchased === "yes").length;
+          const conversionRate = customersCount > 0 ? Math.round((purchasedCount / customersCount) * 100) : 0;
+
+          return (
+            <div 
+              className="fade-in"
+              style={{
+                border: "2px solid #000",
+                background: "var(--lush-gray-light)",
+                padding: "20px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+                marginTop: "4px"
+              }}
+            >
+              {/* Store Detail Header */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", borderBottom: "1px solid #000", paddingBottom: "12px" }}>
+                <h4 style={{ fontSize: "1.2rem", margin: 0, textTransform: "uppercase", fontWeight: "800" }}>
+                  📍 {activeStoreTab}
+                </h4>
+                <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+                  <span className="lush-tag dark" style={{ fontSize: "0.75rem" }}>
+                    Khách tham gia: <strong>{customersCount}</strong>
+                  </span>
+                  <span className="lush-tag green" style={{ fontSize: "0.75rem" }}>
+                    Khách mua hàng: <strong>{purchasedCount}</strong>
+                  </span>
+                  <span className="lush-tag" style={{ fontSize: "0.75rem", background: "var(--lush-gold-light)", borderColor: "var(--lush-gold)" }}>
+                    Tỷ lệ mua: <strong>{conversionRate}%</strong>
+                  </span>
+                </div>
+              </div>
+
+              {/* Customer Records Under Selected Store */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <h5 style={{ fontSize: "0.85rem", textTransform: "uppercase", margin: 0, color: "#555", fontWeight: "800" }}>
+                  Danh sách khách hàng ({customersCount})
+                </h5>
+                
+                {customersCount > 0 ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "12px", maxHeight: "400px", overflowY: "auto", paddingRight: "4px" }}>
+                    {storeReports.map((report) => (
+                      <div 
+                        key={report.id}
+                        style={{
+                          background: "#ffffff",
+                          border: "1px solid var(--lush-gray-medium)",
+                          padding: "16px",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "10px"
+                        }}
+                      >
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+                          <span style={{ fontWeight: "800", fontSize: "0.95rem" }}>
+                            👤 {report.customerName || "Khách hàng ẩn danh"}
+                          </span>
+                          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <span style={{ fontSize: "0.8rem", color: "#666" }}>{report.date}</span>
+                            <span 
+                              className={`lush-tag ${report.purchased === true || report.purchased === "true" || report.purchased === "yes" ? "green" : "dark"}`}
+                              style={{ fontSize: "0.65rem", padding: "2px 6px", fontWeight: "700" }}
+                            >
+                              {report.purchased === true || report.purchased === "true" || report.purchased === "yes" ? "ĐÃ MUA" : "KHÔNG MUA"}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Scalp conditions */}
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", alignItems: "center" }}>
+                          <span style={{ fontSize: "0.75rem", color: "#666", fontWeight: "700" }}>Da đầu:</span>
+                          {report.symptoms && report.symptoms.length > 0 ? (
+                            report.symptoms.map((symId, idx) => (
+                              <span 
+                                key={idx}
+                                style={{
+                                  fontSize: "0.7rem",
+                                  padding: "1px 5px",
+                                  border: "1px solid #ccc",
+                                  borderRadius: "2px",
+                                  background: "#f9f9f9"
+                                }}
+                              >
+                                {getSymptomLabel(symId)}
+                              </span>
+                            ))
+                          ) : (
+                            <span style={{ fontSize: "0.75rem", color: "#999", fontStyle: "italic" }}>Chưa ghi nhận</span>
+                          )}
+                        </div>
+
+                        {/* Routine */}
+                        <div style={{ fontSize: "0.85rem" }}>
+                          <strong>🌿 Routine tư vấn:</strong>{" "}
+                          <span style={{ color: "var(--lush-green)", fontWeight: "600" }}>
+                            {report.routine || "Chưa đề xuất"}
+                          </span>
+                        </div>
+
+                        {/* Feedback */}
+                        <div style={{ fontSize: "0.8rem", borderTop: "1px dashed #eee", paddingTop: "8px", color: "#555", fontStyle: "italic" }}>
+                          💬 {report.feedback ? `"${report.feedback}"` : "Không có nhận xét"}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ padding: "20px", textAlign: "center", color: "#888", background: "#ffffff", border: "1px dashed var(--lush-gray-medium)", fontSize: "0.9rem" }}>
+                    Chưa có khách hàng nào tham gia tại cửa hàng này.
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: "32px", alignItems: "start", marginTop: "16px" }}>
