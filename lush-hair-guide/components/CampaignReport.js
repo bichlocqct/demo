@@ -224,7 +224,7 @@ export default function CampaignReport() {
       <div style={{ borderBottom: "1px solid var(--lush-gray-medium)", paddingBottom: "12px" }}>
         <h2 style={{ fontSize: "1.5rem" }}>Báo Cáo Kết Quả Chiến Dịch Soi Da</h2>
         <p style={{ color: "#666", fontSize: "0.9rem" }}>
-          Nhập kết quả hàng ngày và theo dõi tổng thể thành tích hoạt động của chiến dịch "Workshop soi da đầu cho khách hàng" tại các cửa hàng.
+          Nhập kết quả hàng ngày và theo dõi tổng thể thành tích hoạt động của chiến dịch Workshop soi da đầu cho khách hàng tại các cửa hàng.
         </p>
       </div>
 
